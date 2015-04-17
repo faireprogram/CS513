@@ -1,0 +1,513 @@
+<html>
+
+<head>
+  <script src="shared/jquery.js" type="text/javascript"></script>
+  
+    <!-- Shiny Server Deploy -->
+  <!-- <script type="text/javascript" src="shared/_assert_/shiny-server-pro.js"></script> --> 
+  <!-- <script type="text/javascript" src="shared/_assert_/sockjs-0.3.0.js"></script> -->
+  <!-- <link rel="stylesheet" type="text/css" href="shared/_assert_/shiny-server.css" > -->
+  
+  
+  
+
+  <script src="shared/shiny.js" type="text/javascript"></script>
+  <script src="custom/cosmo/bootswatch.js" type="text/javascript"></script>
+  <script src="shared/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+  
+  <!-- DataTables JS -->
+  <script src="shared/datatables/js/jquery.dataTables.js" type="text/javascript"></script>
+  <script src="shared/datatables/js/dataTables.bootstrap.js" type="text/javascript"></script>
+  
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" type="text/css" href="shared/datatables/css/dataTables.extra.css">
+  <link rel="stylesheet" type="text/css" href="shared/datatables/css/dataTables.bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="shared/shiny.css"/> 
+  <link rel="stylesheet" href="shared/bootstrap/css/bootstrap-responsive.css" media="screen">
+  
+  <link rel="stylesheet" href="custom/cosmo/bootstrap.css" media="screen">
+  <link rel="stylesheet" href="custom/cosmo/bootswatch.min.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="custom/custom.css" >
+  
+  <!-- Rstudio CSS -->
+  <link rel="stylesheet" type="text/css" href="shared/rstudio/rstudio.css">
+  <link rel="stylesheet" type="text/css" href="shared/rstudio/shiny-showcase.css">
+</head>
+ 
+<body>
+
+	<div class="navbar navbar-default navbar-fixed-top shiny-tab-input">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="../" class="navbar-brand">CS513</a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Data <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+				  <li><a href="data-original.html">Original Data</a></li>
+				  <li><a href="data-normalize.html">Normalized Data</a></li>
+				</ul>
+			 </li>
+            <li>
+              <a href="index.html">Index</a>
+            </li>
+            <li>
+              <a href="kmeans.html">Kmeans</a>
+            </li>
+			 <li>
+               <a href="decision-tree.html">Decision Tree</a>
+            </li>
+			 <li>
+               <a href="knn-naivebayes.html">Kmean&Knn Prediction</a>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://builtwithbootstrap.com/" target="_blank">About Project</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<h2>Knn-Naivebayes Panels</h2>
+			</div>
+		</div>
+		  
+	    <div class="row">
+			<div class="col-lg-4">
+				<div class="bs-component">
+					<div class="panel panel-default">
+						 <div class="panel-heading">
+							<span class="label label-default">K Value:</span>
+						 </div>
+						 <div class="panel-body">
+							<input id="K_CURRENT" class="form-control input-sm" style="height:31px;width: 220px;"type="number" value="1"/>
+						 </div>
+					 </div>
+					 
+					 <div class="panel panel-default">
+						 <div class="panel-heading">
+							<span class="label label-default">Kmeans Value:</span>
+						 </div>
+						 <div class="panel-body">
+							<input id="Kmeans_CURRENT" class="form-control input-sm" style="height:31px;width: 220px;"type="number" value="3"/>
+						 </div>
+					 </div>
+				</div>
+			</div>
+			<div class="col-lg-8">
+				<div class="bs-component">
+				
+					<ul class="nav nav-tabs">
+					    <li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+								PlottingComparison <span class="caret"></span>
+							    </a>
+							<ul class="dropdown-menu">
+								<li><a href="#knn_plot_comparison_id" data-toggle="tab">Plotting</a></li>
+								<li><a href="#knn_table_comparison_id" data-toggle="tab">Table</a></li>
+							</ul>
+					    </li>
+						
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+								Kmeans Prediction <span class="caret"></span>
+							    </a>
+							<ul class="dropdown-menu">
+								<li><a href="#kmeans_plot_comparison_id" data-toggle="tab">Plotting</a></li>
+								<li><a href="#kmeans_table_comparison_id" data-toggle="tab">Table</a></li>
+							</ul>
+					    </li>
+					</ul>	
+					
+					<!-- Plot Comparison -->
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane active" id="knn_plot_comparison_id">
+							<div style="width:750px;height:500px;">
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+										<div class="col-lg-12 nopanding">
+											<div class="bs-component">
+												<div class="modal">
+													<div class="modal-dialog">
+													  <div class="modal-content nopanding"">
+															<div class="modal-header">
+																<div>
+																	<code>
+																		<span ># Graph1: age group vs resting blood pressure</span>
+																	</code>
+																</div>
+															</div>
+															<div class="modal-body nopanding">
+																 <div id="KNN_PLOT_1" style="height:200px;" class="shiny-plot-output"></div>
+															</div>
+															 <div class="modal-footer">
+																	<div class="rstudiokinds">
+																		<code>
+																			<span class="comment"># Conclusion 1: Blood pressure level is high between the age 40 to 50 years</span>
+																		</code>
+																	</div>
+															  </div>
+													  </div>
+													</div>
+												 </div>
+											</div>
+										</div>
+										
+										<div class="col-lg-12 nopanding">
+											<div class="bs-component">
+												<div class="modal">
+													<div class="modal-dialog">
+													  <div class="modal-content nopanding"">
+															<div class="modal-header">
+																<div>
+																	<code>
+																		<span ># Graph3: age group vs max heart rate achieved</span>
+																	</code>
+																</div>
+															</div>
+															<div class="modal-body nopanding">
+															  <div style="height:200px;">
+																	  <div id="KNN_PLOT_3" style="height:200px;" class="shiny-plot-output"></div>
+															   </div>
+															</div>
+															 <div class="modal-footer">
+																	<div class="rstudiokinds">
+																		<code>
+																			<span class="comment"># Conclusion 3: Higher heart rate between the ages 30 to 40 years</span>
+																		</code>
+																	</div>
+															  </div>
+													  </div>
+													</div>
+												 </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+										<div class="col-lg-12 nopanding">
+											<div class="bs-component">
+												<div class="modal">
+													<div class="modal-dialog">
+													  <div class="modal-content nopanding"">
+															<div class="modal-header">
+																<div>
+																	<code>
+																		<span ># Graph2: age group vs cholestrol level</span>
+																	</code>
+																</div>
+															</div>
+															<div class="modal-body" style="padding:0px;">
+																<div id="KNN_PLOT_2" style="height:200px;" class="shiny-plot-output"> </div>
+															</div>
+															 <div class="modal-footer">
+																	<div class="rstudiokinds">
+																		<code>
+																			<span class="comment"># Conclusion 2: Cholestrol level high between the age 40 to 60 years</span>
+																		</code>
+																	</div>
+															</div>
+														</div>
+													</div>
+												 </div>
+											</div>
+										</div>
+										
+										<div class="col-lg-12 nopanding">
+											<div class="bs-component">
+												<div class="modal">
+													<div class="modal-dialog">
+													  <div class="modal-content nopanding"">
+															<div class="modal-header">
+																<div>
+																	<code>
+																		<span ># Graph4:age group vs ST depression rate</span>
+																	</code>
+																</div>
+															</div>
+															<div class="modal-body nopanding">
+															  <div style="height:200px;">
+																	  <div id="KNN_PLOT_4" style="height:200px;" class="shiny-plot-output"> </div>
+															   </div>
+															</div>
+															 <div class="modal-footer">
+																	<div class="rstudiokinds">
+																		<code>
+																			<span class="comment"># Conclusion 4: Higher ST depression rate is found between the ages 50 to 60 years</span>
+																		</code>
+																	</div>
+															  </div>
+													  </div>
+													</div>
+												 </div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Table Comparison -->
+						<div class="tab-pane" id="knn_table_comparison_id">
+							<div style="width:750px;">
+								<div class="col-lg-12 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span >Age VS Chest Pain</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+													<pre id="KNN_PLOT_Table_1" class="shiny-text-output"/>
+											</div>
+											<div class="modal-footer">
+												<div class="rstudiokinds">
+													<code>
+														<span class="comment"># Conclusion 5: More asymptomatic chest pain type found between ages 50 to 60 years and non anginal chest pain found mainly between 40 to 50 years of age</span>
+													</code>
+												</div>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-12 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span >Heart Diameter narrowing</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+												<pre id="KNN_PLOT_Table_2" class="shiny-text-output"/> 
+											</div>
+											<div class="modal-footer">
+												<div class="rstudiokinds">
+													<code>
+														<span class="comment"># Conclusion 6: Heart diameter narrowing >50% mainly found between the ages 50 to 60 years more patients between 40 to 60 years of age</span>
+													</code>
+												</div>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-12 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span >Final CONCLUSION</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body">
+												<span class="comment">
+													<p>#Patients more prone to cardiovascular problems are </p>
+												</span>
+												<span class="comment"><p>#                   between the ages 40 to 60 years </p> </span>
+												<span class="comment"><p># Patients more prone to heart attacks are between the ages 50 to 60 years </p> </span>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+							</div>
+						</div>
+							<!-- Kmean Table Comparison -->
+						<div class="tab-pane" id="kmeans_table_comparison_id">
+							<div>
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span >#Frequency Table age cluster</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+													<pre id="KMEAN_PLOT_Table_1" class="shiny-text-output"/>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span >#Frequency Table heart_narrowing cluster</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+												<pre id="KMEAN_PLOT_Table_2" class="shiny-text-output"/>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span ># Frequency Table chest_pain_type cluster</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+													<pre id="KMEAN_PLOT_Table_3" class="shiny-text-output"/>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span ># Frequency Table ECG_result cluster</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+												<pre id="KMEAN_PLOT_Table_4" class="shiny-text-output"/>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Kmean Plot Comparison -->
+						<div class="tab-pane" id="kmeans_plot_comparison_id">
+							<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span ># max_heart_rate vs age</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+												<div style="height:200px;" id="KMEAN_PLOT_1" class="shiny-plot-output"> </div>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span ># resting_bp vs age</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+												<div style="height:200px;"  id="KMEAN_PLOT_2" class="shiny-plot-output"> </div>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-6 nopanding">
+									<div class="bs-component">
+									  <div class="modal">
+										<div class="modal-dialog">
+										  <div class="modal-content nopanding">
+											<div class="modal-header">
+												<div>
+													<code>
+														<span ># age vs cholestrol</span>
+													</code>
+												</div>
+												
+											</div>
+											<div class="modal-body nopanding">
+												<div style="height:200px;"  id="KMEAN_PLOT_3" class="shiny-plot-output"> </div>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+</body>
+
+</html>

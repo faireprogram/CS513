@@ -1,0 +1,33 @@
+Classifying Heart Disease
+
+C513-ShinyApps (ShinyProjects)
+dtrees.R (Decision Tree)
+knn&kmeans.R (Kmeans&KNN)
+heart-c.csv      (DataSet)
+
+
+Important: to deploy shinyproject, it's required to run this cmd below
+
+> install.packages("shiny")
+> install.packages("devtools")
+> devtools::install_github('rstudio/shinyapps')
+> #runApp(path_to_project)
+> runApp('C513-ShinyApps')
+
+
+We were the first team to present.
+
+TeamMembers: (Group 7)
+
+   Daniel Diaz
+
+   Ram Kharawala 
+
+   Mohit Bhasin
+   
+   Wen Zhang
+
+
+
+
+
